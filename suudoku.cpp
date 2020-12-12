@@ -197,7 +197,7 @@ void stackCandidateMatrix(){
   if(cand.size()==0){
     cout << "No validate candidate found: pop the stack!" << endl;
   } else {
-    cout << "Fill candidate at (" << cand[0][0] << "," << cand[0][1] << ")" << endl;
+    //cout << "Fill candidate at (" << cand[0][0] << "," << cand[0][1] << ")" << endl;
   }
 }
 void popCandidateMatrix(){
@@ -266,29 +266,29 @@ int main() {
   }
   while(shouldContinue() || !checkValidation()){
     if(!checkValidation()){
-      cout << "Validation failure: try another caididate!" << endl;
+      //cout << "Validation failure: try another caididate!" << endl;
       if(st.size()==0) {
-        cout << "Error: stack is empty!" << endl;
+        //cout << "Error: stack is empty!" << endl;
         return 1;
       }
       popCandidateMatrix();
-      cout << "Promote with:" << endl;
-      print();
+      //cout << "Promote with:" << endl;
+      //print();
     }
     fillCandMap();
     insertQueue();
     if(que.empty()){
-      cout << "No certain move found: try with one of the candidate" << endl;
-      cout << "Current map:" << endl;
-      print();
+      //cout << "No certain move found: try with one of the candidate" << endl;
+      //cout << "Current map:" << endl;
+      //print();
       stackCandidateMatrix();
       if(st.size()==0) {
         cout << "Error: stack is empty!" << endl;
         return 1;
       }
       popCandidateMatrix();
-      cout << "Promote with:" << endl;
-      print();
+      //cout << "Promote with:" << endl;
+      //print();
     }
     while(!que.empty()) {
       vl vec = que.front();
