@@ -1,5 +1,6 @@
 /*{{{*/
 #include<bits/stdc++.h>
+#include<unistd.h>
 
 typedef long long ll;
 
@@ -20,6 +21,7 @@ vector<vl> number(9,vl(9,0));
 vector<vector<vector<bool>>> candMap(9,vector<vector<bool>>(9,vector<bool>(10,true)));
 queue<vl> que;
 stack<pair<string,vl>> st;
+vector<vl> queLog; // {x, y, k} k is filling number. if popping, k = 0.
 void print() {
   cout << "-------------" << endl;
   REP(i,9) {
@@ -63,6 +65,7 @@ void fillCandMap() {
       if(number[ui][uj]!=0) {
         candMap[ui][uj] = vector<bool>(10,false);
         candMap[ui][uj][number[ui][uj]] = true;
+        //continue;
       }
 
       // horizontal
@@ -160,6 +163,7 @@ void insertQueue() {
 }
 void fillNumber(ll i, ll j, ll k){
   number[i][j] = k;
+  queLog.push_back({i,j,k});
   //cout << "Fill number: (" << i << "," << j << ") = " << k << endl;
 }
 bool shouldContinue(){
@@ -212,6 +216,12 @@ void popCandidateMatrix(){
   string encoded = st.top().first;
   vl vec = st.top().second;
   st.pop();
+  ll cursor = queLog.size()-1;
+  while(encodeMatrix(number)!=encoded){
+    vl tmp = queLog[cursor];
+    fillNumber(tmp[0],tmp[1],0);
+    cursor--;
+  }
   number = decodeMatrix(encoded);
   fillNumber(vec[0],vec[1],vec[2]);
 }
@@ -253,6 +263,14 @@ bool checkValidation(){
       }
     }
   }
+  //// no candidate is validate
+  //fillCandMap();
+  //REP(i,9) REP(j,9) {
+  //  ll validCount = 0;
+  //  FOR(k,1,10) if(candMap[i][j][k]) validCount++;
+  //  if(validCount==0) cout << "(" << i << "," << j << ") has no valid candidate!" << endl; 
+  //  result &= validCount>0;
+  //}
   return result;
 }
 int main() {
@@ -267,6 +285,7 @@ int main() {
   }
   cout << "given matrix:" << endl;
   print();
+  string givenMatrixString = encodeMatrix(number);
   if(!checkValidation()){
     cout << "validation failed for default input!" << endl;
     print();
@@ -303,6 +322,15 @@ int main() {
       que.pop();
       fillNumber(vec[0],vec[1],vec[2]);
     }
+  }
+  cout << "fill log:" << endl;
+  number = decodeMatrix(givenMatrixString);
+  REP(i,queLog.size()){
+    if(number[queLog[i][0]][queLog[i][1]]==0 && queLog[i][2]==0) continue;
+    cout << "(" << queLog[i][0] << "," << queLog[i][1] << "): " << queLog[i][2] << endl;
+    fillNumber(queLog[i][0],queLog[i][1],queLog[i][2]);
+    print();
+    sleep(1);
   }
   cout << "answer:" << endl;
   print();
