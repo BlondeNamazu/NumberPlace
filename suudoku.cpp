@@ -19,9 +19,10 @@ using namespace std;
 vector<vl> number(9,vl(9,0));
 // candMap[i][j][k] = number[i][j] can be k (k is 1-origin)
 vector<vector<vector<bool>>> candMap(9,vector<vector<bool>>(9,vector<bool>(10,true)));
-queue<vl> que;
-stack<pair<string,vl>> st;
+queue<vl> que; // {x, y, k}, which can be filled
+stack<pair<string,vl>> st; // {encoded_matrix, {cand_x, cand_y, cand_k}}
 vector<vl> queLog; // {x, y, k} k is filling number. if popping, k = 0.
+stack<vl> actionStack; // {x, y, k} k is filling number. if popping, k = 0.
 void print() {
   cout << "-------------" << endl;
   REP(i,9) {
@@ -163,7 +164,6 @@ void insertQueue() {
 }
 void fillNumber(ll i, ll j, ll k){
   number[i][j] = k;
-  queLog.push_back({i,j,k});
   //cout << "Fill number: (" << i << "," << j << ") = " << k << endl;
 }
 bool shouldContinue(){
@@ -216,14 +216,24 @@ void popCandidateMatrix(){
   string encoded = st.top().first;
   vl vec = st.top().second;
   st.pop();
-  ll cursor = queLog.size()-1;
-  while(encodeMatrix(number)!=encoded){
-    vl tmp = queLog[cursor];
-    fillNumber(tmp[0],tmp[1],0);
-    cursor--;
-  }
+  cout << "start popping!" << endl;
+  print();
+  string saveBeforeNumber = encodeMatrix(number);
   number = decodeMatrix(encoded);
+  cout << "pop actions until number becomes:" << endl;
+  print();
+  number = decodeMatrix(saveBeforeNumber);
+  while(encodeMatrix(number)!=encoded){
+    vl tmp = actionStack.top();
+    actionStack.pop();
+    cout << "pop action: (" << tmp[0] << "," << tmp[1] << ")<-" << tmp[2] << endl;
+    fillNumber(tmp[0],tmp[1],0);
+    queLog.push_back({tmp[0],tmp[1],0});
+    print();
+  }
+  actionStack.push(vec);
   fillNumber(vec[0],vec[1],vec[2]);
+  queLog.push_back({vec[0],vec[1],vec[2]});
 }
 bool checkValidation(){
   bool result = true;
@@ -320,17 +330,18 @@ int main() {
     while(!que.empty()) {
       vl vec = que.front();
       que.pop();
+      actionStack.push(vec);
       fillNumber(vec[0],vec[1],vec[2]);
+      queLog.push_back({vec[0],vec[1],vec[2]});
     }
   }
-  cout << "fill log:" << endl;
+  cout << "action log:" << endl;
   number = decodeMatrix(givenMatrixString);
   REP(i,queLog.size()){
-    if(number[queLog[i][0]][queLog[i][1]]==0 && queLog[i][2]==0) continue;
     cout << "(" << queLog[i][0] << "," << queLog[i][1] << "): " << queLog[i][2] << endl;
     fillNumber(queLog[i][0],queLog[i][1],queLog[i][2]);
     print();
-    sleep(1);
+    usleep(100000);
   }
   cout << "answer:" << endl;
   print();
