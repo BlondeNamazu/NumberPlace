@@ -338,12 +338,12 @@ int main() {
   }
   cout << "action log:" << endl;
   number = decodeMatrix(givenMatrixString);
-  //REP(i,queLog.size()){
-  //  cout << "(" << queLog[i][0] << "," << queLog[i][1] << "): " << queLog[i][2] << endl;
-  //  fillNumber(queLog[i][0],queLog[i][1],queLog[i][2]);
-  //  print();
-  //  usleep(100000);
-  //}
+  REP(i,queLog.size()){
+    cout << "(" << queLog[i][0] << "," << queLog[i][1] << "): " << queLog[i][2] << endl;
+    fillNumber(queLog[i][0],queLog[i][1],queLog[i][2]);
+    print();
+    usleep(100000);
+  }
   cout << queLog.size() << " steps needed" << endl;
   cout << "answer:" << endl;
   print();
