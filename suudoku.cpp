@@ -273,14 +273,15 @@ bool checkValidation(){
       }
     }
   }
-  //// no candidate is validate
-  //fillCandMap();
-  //REP(i,9) REP(j,9) {
-  //  ll validCount = 0;
-  //  FOR(k,1,10) if(candMap[i][j][k]) validCount++;
-  //  if(validCount==0) cout << "(" << i << "," << j << ") has no valid candidate!" << endl; 
-  //  result &= validCount>0;
-  //}
+  // no candidate is validate
+  fillCandMap();
+  REP(i,9) REP(j,9) {
+    ll validCount = 0;
+    FOR(k,1,10) if(candMap[i][j][k]) validCount++;
+    bool valid = number[i][j]>0 || validCount>0;
+    if(valid) cout << "(" << i << "," << j << ") has no valid candidate!" << endl; 
+    result &= valid;
+  }
   return result;
 }
 int main() {
@@ -343,6 +344,7 @@ int main() {
     print();
     usleep(100000);
   }
+  cout << queLog.size() << " steps needed" << endl;
   cout << "answer:" << endl;
   print();
   return 0;
