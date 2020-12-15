@@ -195,7 +195,7 @@ void stackCandidateMatrix(){
     st.push({encoded,cand[i]});
   }
   if(cand.size()==0){
-    cout << "No validate candidate found: pop the stack!" << endl;
+    //cout << "No validate candidate found: pop the stack!" << endl;
   } else {
     //cout << "Fill candidate at (" << cand[0][0] << "," << cand[0][1] << ")" << endl;
   }
@@ -264,12 +264,14 @@ int main() {
     print();
     return 1;
   }
+  ll count = 0;
   while(shouldContinue() || !checkValidation()){
     if(!checkValidation()){
       //cout << "Validation failure: try another caididate!" << endl;
       if(st.size()==0) {
         //cout << "Error: stack is empty!" << endl;
-        return 1;
+        //return 1;
+        break;
       }
       popCandidateMatrix();
       //cout << "Promote with:" << endl;
@@ -283,8 +285,9 @@ int main() {
       //print();
       stackCandidateMatrix();
       if(st.size()==0) {
-        cout << "Error: stack is empty!" << endl;
-        return 1;
+        //cout << "Error: stack is empty!" << endl;
+        //return 1;
+        break;
       }
       popCandidateMatrix();
       //cout << "Promote with:" << endl;
@@ -295,8 +298,19 @@ int main() {
       que.pop();
       fillNumber(vec[0],vec[1],vec[2]);
     }
+    if(!shouldContinue()){
+      //print();
+      if(count==0) {
+        count++;
+        if(st.size()>0) popCandidateMatrix();
+      } else {
+        cout << "multiple answer found!" << endl;
+        return 0;
+      }
+    }
   }
-  cout << "answer:" << endl;
-  print();
+  cout << "only 1 answer found!" << endl;
+  //cout << "answer:" << endl;
+  //print();
   return 0;
 }
