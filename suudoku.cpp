@@ -89,6 +89,10 @@ void fillCandMap() {
   //printCandMap();
 }
 void insertQueue() {
+  // to avoid duplicate action in queue
+  vector<vector<bool>> alreadyFilled = vector<vector<bool>>(9,vector<bool>(9,false));
+  REP(i,9) REP(j,9) alreadyFilled[i][j] = number[i][j] != 0;
+
   // only 1 candidate in a mesh
   REP(i,9){
     REP(j,9){
@@ -96,9 +100,10 @@ void insertQueue() {
       FOR(k,1,10){
         if(candMap[i][j][k]) cands.push_back(k);
       }
-      if(cands.size()==1 && number[i][j]==0) {
-        //cout << "Candidate unique in the mesh: (" << i << "," << j << ") = " << cands[0] << endl;
+      if(cands.size()==1 && alreadyFilled[i][j] && number[i][j]==0) {
+        cout << "Candidate unique in the mesh: (" << i << "," << j << ") = " << cands[0] << endl;
         que.push({i,j,cands[0]});
+        alreadyFilled[i][j] = true;
       }
     }
   }
@@ -116,9 +121,10 @@ void insertQueue() {
             if(candMap[i][j][k]) cands.push_back({i,j,k});
           }
         }
-        if(cands.size()==1){
-          //cout << "Candidate unique in the box: (" << cands[0][0] << "," << cands[0][1] << ") = " << k << endl;
+        if(cands.size()==1 && !alreadyFilled[cands[0][0]][cands[0][1]]){
+          cout << "Candidate unique in the box: (" << cands[0][0] << "," << cands[0][1] << ") = " << k << endl;
           que.push(cands[0]);
+          alreadyFilled[cands[0][0]][cands[0][1]] = true;
         }
       }
     }
@@ -130,9 +136,10 @@ void insertQueue() {
       REP(j,9){
         if(candMap[i][j][k]) cands.push_back({i,j,k});
       }
-      if(cands.size()==1){
-        //cout << "Candidate unique in the horizontal: (" << cands[0][0] << "," << cands[0][1] << ") = " << k << endl;
+      if(cands.size()==1 && !alreadyFilled[cands[0][0]][cands[0][1]]){
+        cout << "Candidate unique in the horizontal: (" << cands[0][0] << "," << cands[0][1] << ") = " << k << endl;
         que.push(cands[0]);
+        alreadyFilled[cands[0][0]][cands[0][1]] = true;
       }
     }
   }
@@ -143,9 +150,10 @@ void insertQueue() {
       REP(i,9){
         if(candMap[i][j][k]) cands.push_back({i,j,k});
       }
-      if(cands.size()==1){
-        //cout << "Candidate unique in the vertical: (" << cands[0][0] << "," << cands[0][1] << ") = " << k << endl;
+      if(cands.size()==1 && !alreadyFilled[cands[0][0]][cands[0][1]]){
+        cout << "Candidate unique in the vertical: (" << cands[0][0] << "," << cands[0][1] << ") = " << k << endl;
         que.push(cands[0]);
+        alreadyFilled[cands[0][0]][cands[0][1]] = true;
       }
     }
   }
